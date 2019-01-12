@@ -230,8 +230,8 @@ class Table():
         s = self.matrix[0][1]
         x = 1
         y = 0
-        for i in range(len(self.matrix)):
-            for j in range(len(self.matrix[i])):
+        for j in range(len(self.matrix[0])):
+            for i in range(len(self.matrix)):
                 if self.matrix[i][j] < s and self.matrix[i][j] != 0:
                     s = self.matrix[i][j]
                     x = j
