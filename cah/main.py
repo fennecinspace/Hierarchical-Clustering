@@ -1,6 +1,8 @@
 from functions import * 
 
 if __name__ == '__main__':
+    draw_matrix = []
+
     I = [
         [1, 1],
         [1, 2],
@@ -10,23 +12,29 @@ if __name__ == '__main__':
         [2, 1],
     ]
 
-    classes_nb = len(I) + 1
-
-    for i in range(len(I)):
-        I[i] = Class(I[i], '{}'.format(i + 1), weight = 1)
+    # converting Ind vectors into Class instances 
+    classes_nb = len(I)
+    for i in range(classes_nb):
+        I[i] = Class(I[i], '{}'.format(i), weight = 1)
         
-
+    # start CAH
     while len(I) > 1:
         s = calculate_distances_table(I, I)
         s.show()
 
+        # get smallest distance and its cordinates in table s 
         r, y, x = s.get_smallest_val()
 
+        # removing the classes where the smallest distance was found 
         if x > y:
             a, b = I.pop(x), I.pop(y)
         else:
             a, b = I.pop(y), I.pop(x)
 
+        # save removed classes labels and distance between them for drawing later
+        draw_matrix += [[int(a.label), int(b.label), r, 0]]
+
+        # creating a new class that regroups the old removed classes
         new = Class(
             vect = [], 
             label = '{}'.format(classes_nb), 
@@ -36,19 +44,8 @@ if __name__ == '__main__':
 
         classes_nb += 1
 
+        # updating the I vector with the newly created class 
         I = [new, *I]
 
-    data = get_draw_data(I[0])
-
-    ## drawing 
-    root_nb = list(data.keys())[0]
-    root = Node(int(root_nb))
-    createTree(root, data[root_nb][0], True)
-    createTree(root, data[root_nb][1], False)
-    print(root)
-
-    ## more info
-    more_data = get_draw_data_2(I[0])
-    print (json.dumps(more_data, sort_keys=False, indent=3))
-
-    
+    # draw the dendrogram 
+    draw(draw_matrix)
